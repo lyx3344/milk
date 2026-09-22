@@ -179,333 +179,369 @@
         }
 
         #splash-declaration {
+            --splash-ink: #2c241c;
+            --splash-ink-soft: #5c4f42;
+            --splash-line: rgba(44, 36, 28, 0.12);
+            --splash-accent: #a67c52;
+            --splash-accent-deep: #8a6440;
             position: fixed;
             inset: 0;
             z-index: 999999;
-            background: #06060e;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
-            font-family: 'Noto Serif SC', serif;
+            font-family: 'Noto Serif SC', 'Songti SC', serif;
+            color: var(--splash-ink);
+            background:
+                radial-gradient(ellipse 90% 60% at 50% -20%, rgba(166, 124, 82, 0.14), transparent 55%),
+                linear-gradient(165deg, #f8f2e9 0%, #efe4d4 45%, #e8dcc8 100%);
             overflow: hidden;
-            transition: opacity 0.9s ease;
+            transition: opacity 0.85s ease, transform 0.85s ease;
         }
-        #splash-declaration.splash-fade-out {
-            opacity: 0 !important;
-            pointer-events: none;
-        }
-        .splash-bg-stars {
+        #splash-declaration::before {
+            content: '';
             position: absolute;
             inset: 0;
             pointer-events: none;
+            opacity: 0.35;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(44, 36, 28, 0.015) 3px,
+                    rgba(44, 36, 28, 0.015) 4px
+                );
         }
-        .splash-bg-stars span {
-            position: absolute;
-            border-radius: 50%;
-            background: #fff;
-            animation: splashTwinkle 3s infinite alternate;
-        }
-        @keyframes splashTwinkle {
-            from { opacity: 0.15; }
-            to   { opacity: 0.85; }
-        }
-        .splash-glow-1 {
-            position: absolute;
-            width: 500px; height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(var(--accent-color-rgb,197,164,126), 0.1) 0%, transparent 65%);
-            top: 20%; left: 50%;
-            transform: translateX(-50%);
+        #splash-declaration.splash-fade-out {
+            opacity: 0 !important;
+            transform: translateY(-12px);
             pointer-events: none;
-            animation: splashGlowPulse 6s ease-in-out infinite;
         }
-        .splash-glow-2 {
-            position: absolute;
-            width: 300px; height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(120,100,200, 0.07) 0%, transparent 65%);
-            bottom: 15%; right: 10%;
-            pointer-events: none;
-            animation: splashGlowPulse 8s ease-in-out infinite reverse;
-        }
-        @keyframes splashGlowPulse {
-            0%,100%{ opacity: 0.7; transform: translateX(-50%) scale(1); }
-            50%    { opacity: 1;   transform: translateX(-50%) scale(1.15); }
-        }
-        .splash-inner {
+        .splash-letter {
             position: relative;
-            z-index: 2;
-            width: min(500px, 93vw);
+            z-index: 1;
+            width: min(640px, 100%);
+            height: 100%;
+            max-height: 100dvh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            animation: splashInnerIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
+            padding:
+                max(28px, env(safe-area-inset-top))
+                max(22px, env(safe-area-inset-right))
+                max(22px, env(safe-area-inset-bottom))
+                max(22px, env(safe-area-inset-left));
+            box-sizing: border-box;
+            animation: splashLetterIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
-        @keyframes splashInnerIn {
-            from { opacity:0; transform:translateY(24px); }
-            to   { opacity:1; transform:translateY(0); }
+        @keyframes splashLetterIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        .splash-badge {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.1);
-            border: 1px solid rgba(var(--accent-color-rgb,197,164,126), 0.22);
-            border-radius: 50px;
-            padding: 6px 16px;
-            margin-bottom: 20px;
-            font-size: 11px;
-            letter-spacing: 2px;
-            color: rgba(var(--accent-color-rgb,197,164,126), 0.8);
+        .splash-letter-header {
+            flex-shrink: 0;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--splash-line);
+            margin-bottom: 8px;
         }
-        .splash-badge i { font-size: 10px; }
-        .splash-dots {
-            display: flex;
-            gap: 7px;
-            margin-bottom: 20px;
+        .splash-brand {
+            font-size: clamp(36px, 9vw, 48px);
+            font-weight: 600;
+            letter-spacing: 0.28em;
+            line-height: 1.1;
+            color: var(--splash-ink);
+            margin: 0 0 6px;
+            text-indent: 0.28em;
         }
-        .splash-dot {
-            width: 5px; height: 5px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+        .splash-letter-kicker {
+            font-size: 12px;
+            letter-spacing: 0.35em;
+            color: var(--splash-ink-soft);
+            margin-bottom: 16px;
+            text-indent: 0.35em;
         }
-        .splash-dot.active {
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.85);
-            width: 20px;
-            border-radius: 3px;
-        }
-        .splash-dot.done {
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.35);
-        }
-        .splash-card {
-            width: 100%;
-            background: linear-gradient(145deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.02) 100%);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 24px;
-            padding: 0;
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07);
-            overflow: hidden;
-        }
-        .splash-card-top-line {
+        .splash-progress {
             height: 2px;
-            background: linear-gradient(90deg, transparent 0%, rgba(var(--accent-color-rgb,197,164,126),0.6) 40%, rgba(var(--accent-color-rgb,197,164,126),0.6) 60%, transparent 100%);
+            width: 100%;
+            background: rgba(44, 36, 28, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 14px;
         }
-        .splash-card-body {
-            padding: 28px 30px 26px;
+        .splash-progress-fill {
+            height: 100%;
+            width: calc(100% / 7);
+            background: linear-gradient(90deg, var(--splash-accent), var(--splash-accent-deep));
+            border-radius: 2px;
+            transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .splash-chapters {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 6px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 2px;
+        }
+        .splash-chapters::-webkit-scrollbar { display: none; }
+        .splash-chapter {
+            flex: 0 0 auto;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            color: rgba(44, 36, 28, 0.42);
+            padding: 6px 10px;
+            cursor: pointer;
+            border-bottom: 1.5px solid transparent;
+            transition: color 0.25s, border-color 0.25s;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .splash-chapter:hover { color: var(--splash-ink-soft); }
+        .splash-chapter.active {
+            color: var(--splash-accent-deep);
+            border-bottom-color: var(--splash-accent);
+            font-weight: 600;
+        }
+        .splash-chapter.done { color: rgba(44, 36, 28, 0.55); }
+        .splash-letter-main {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px 2px 12px;
         }
         .splash-slides {
             position: relative;
-            overflow: hidden;
-            min-height: 200px;
+            min-height: 100%;
         }
         .splash-slide {
             position: absolute;
             inset: 0;
             opacity: 0;
-            transform: translateX(28px);
-            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+            transform: translateX(24px);
+            transition: opacity 0.4s ease, transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             display: flex;
             flex-direction: column;
+            height: fit-content;
         }
         .splash-slide.active {
             opacity: 1;
             transform: translateX(0);
             pointer-events: all;
             position: relative;
+            animation: splashSlideRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
         .splash-slide.exit-left {
             opacity: 0;
-            transform: translateX(-28px);
+            transform: translateX(-20px);
             position: absolute;
         }
-        .splash-slide-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 10px;
-            letter-spacing: 2.5px;
-            color: rgba(var(--accent-color-rgb,197,164,126), 0.65);
-            margin-bottom: 10px;
+        @keyframes splashSlideRise {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        .splash-slide-tag::before {
-            content: '';
-            display: inline-block;
-            width: 16px; height: 1px;
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.5);
+        .splash-slide-tag {
+            font-size: 12px;
+            letter-spacing: 0.28em;
+            color: var(--splash-accent-deep);
+            margin-bottom: 12px;
         }
         .splash-slide-title {
-            font-size: 20px;
+            font-size: clamp(24px, 6vw, 30px);
             font-weight: 600;
-            color: rgba(255,255,255,0.92);
-            margin-bottom: 18px;
             line-height: 1.35;
+            color: var(--splash-ink);
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--splash-line);
         }
         .splash-slide-body {
-            font-size: 13.5px;
-            line-height: 2;
-            color: rgba(255,255,255,0.5);
+            font-size: 15px;
+            line-height: 1.95;
+            color: var(--splash-ink-soft);
         }
         .splash-slide-body em {
-            color: rgba(var(--accent-color-rgb,197,164,126), 0.85);
+            color: var(--splash-accent-deep);
             font-style: normal;
+            font-weight: 500;
         }
         .splash-slide-body strong {
-            color: rgba(255,255,255,0.78);
+            color: var(--splash-ink);
             font-weight: 600;
         }
         .splash-slide-body .splash-highlight-box {
-            margin-top: 14px;
-            padding: 12px 16px;
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.07);
-            border-left: 2px solid rgba(var(--accent-color-rgb,197,164,126), 0.45);
-            border-radius: 0 8px 8px 0;
-            font-size: 12.5px;
-            color: rgba(255,255,255,0.55);
+            margin-top: 18px;
+            padding: 14px 16px;
+            background: rgba(166, 124, 82, 0.1);
+            border-left: 3px solid var(--splash-accent);
+            font-size: 14px;
+            color: var(--splash-ink);
             line-height: 1.8;
         }
         .splash-pledge-desc {
-            font-size: 12.5px;
-            color: rgba(255,255,255,0.4);
+            font-size: 14px;
+            color: var(--splash-ink-soft);
             margin-bottom: 16px;
             line-height: 1.8;
         }
+        .splash-pledge-desc em {
+            color: var(--splash-accent-deep);
+            font-style: normal;
+            font-weight: 600;
+        }
         .splash-pledge-required {
             width: 100%;
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.08);
-            border: 1px dashed rgba(var(--accent-color-rgb,197,164,126), 0.4);
-            border-radius: 10px;
-            padding: 12px 16px;
+            box-sizing: border-box;
+            background: rgba(255, 252, 247, 0.85);
+            border: 1px dashed rgba(166, 124, 82, 0.55);
+            padding: 16px 18px;
             font-size: 14px;
-            font-family: 'Noto Serif SC', serif;
-            color: rgba(var(--accent-color-rgb,197,164,126), 0.85);
+            font-family: inherit;
+            color: var(--splash-accent-deep);
             text-align: center;
-            margin-bottom: 14px;
-            line-height: 1.7;
+            margin-bottom: 16px;
+            line-height: 1.75;
             cursor: text;
             user-select: all;
             -webkit-user-select: all;
         }
         .splash-pledge-input {
             width: 100%;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 13px 16px;
-            font-size: 14px;
-            color: rgba(255,255,255,0.85);
-            font-family: 'Noto Serif SC', serif;
-            outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            text-align: center;
-            caret-color: rgba(var(--accent-color-rgb,197,164,126), 0.9);
             box-sizing: border-box;
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px solid rgba(44, 36, 28, 0.22);
+            border-radius: 0;
+            padding: 12px 4px;
+            font-size: 15px;
+            color: var(--splash-ink);
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.25s;
+            text-align: center;
+            caret-color: var(--splash-accent-deep);
+        }
+        .splash-pledge-input::placeholder {
+            color: rgba(44, 36, 28, 0.32);
         }
         .splash-pledge-input:focus {
-            border-color: rgba(var(--accent-color-rgb,197,164,126), 0.5);
-            box-shadow: 0 0 0 3px rgba(var(--accent-color-rgb,197,164,126), 0.08);
+            border-bottom-color: var(--splash-accent);
         }
         .splash-pledge-input.correct {
-            border-color: rgba(100,200,120,0.6);
-            box-shadow: 0 0 0 3px rgba(100,200,120,0.08);
-            color: #a5d6a7;
-        }
-        @keyframes splashShake {
-            0%,100%{transform:translateX(0)}
-            20%{transform:translateX(-7px)}
-            60%{transform:translateX(7px)}
-            80%{transform:translateX(-4px)}
+            border-bottom-color: #5f8f5a;
+            color: #3d6b3a;
         }
         .splash-pledge-hint {
-            font-size: 11.5px;
-            color: rgba(255,255,255,0.36);
+            font-size: 12px;
+            color: rgba(44, 36, 28, 0.45);
             text-align: center;
-            margin-top: 10px;
-            min-height: 17px;
-            transition: color 0.3s;
-            letter-spacing: 0.5px;
+            margin-top: 12px;
+            min-height: 18px;
+            letter-spacing: 0.06em;
+            transition: color 0.25s;
         }
-        .splash-pledge-hint.ok { color: rgba(120,210,140,0.8); }
-        .splash-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
-            margin: 22px 0;
-        }
-        .splash-footer {
+        .splash-pledge-hint.ok { color: #3d6b3a; }
+        .splash-letter-footer {
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 30px 24px;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--splash-line);
+            margin-top: 4px;
         }
         .splash-btn {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 10px 22px;
-            border-radius: 50px;
+            justify-content: center;
+            min-height: 42px;
+            padding: 0 18px;
+            border: none;
             cursor: pointer;
-            font-family: 'Noto Serif SC', serif;
-            font-size: 13px;
-            font-weight: 400;
-            transition: all 0.25s ease;
-            white-space: nowrap;
-            user-select: none;
+            font-family: inherit;
+            font-size: 14px;
+            letter-spacing: 0.12em;
+            transition: background 0.25s, color 0.25s, opacity 0.25s, transform 0.2s;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
-        .splash-btn i { font-size: 10px; }
-        .splash-btn-ghost {
+        .splash-btn-text {
             background: transparent;
-            color: rgba(255,255,255,0.3);
-            border: 1px solid rgba(255,255,255,0.09);
+            color: var(--splash-ink-soft);
+            padding-left: 4px;
+            padding-right: 4px;
         }
-        .splash-btn-ghost:hover, .splash-btn-ghost:active {
-            color: rgba(255,255,255,0.6);
-            border-color: rgba(255,255,255,0.18);
-            background: rgba(255,255,255,0.04);
+        .splash-btn-text:hover:not(:disabled),
+        .splash-btn-text:active:not(:disabled) {
+            color: var(--splash-ink);
         }
-        .splash-btn-ghost:disabled {
-            opacity: 0.25;
+        .splash-btn-text:disabled {
+            opacity: 0.28;
             cursor: default;
-            pointer-events: none;
         }
         .splash-btn-next {
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.12);
-            color: rgba(var(--accent-color-rgb,197,164,126), 0.9);
-            border: 1px solid rgba(var(--accent-color-rgb,197,164,126), 0.28);
+            background: var(--splash-ink);
+            color: #f7f0e6;
+            min-width: 112px;
         }
-        .splash-btn-next:hover, .splash-btn-next:active {
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.22);
+        .splash-btn-next:hover,
+        .splash-btn-next:active {
+            background: #1f1914;
+            transform: translateY(-1px);
         }
         .splash-btn-enter {
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.18);
-            color: rgba(var(--accent-color-rgb,197,164,126), 0.5);
-            border: 1px solid rgba(var(--accent-color-rgb,197,164,126), 0.2);
+            background: rgba(166, 124, 82, 0.28);
+            color: rgba(44, 36, 28, 0.4);
+            min-width: 112px;
             cursor: default;
-            transition: all 0.4s ease;
         }
         .splash-btn-enter.ready {
-            background: rgba(var(--accent-color-rgb,197,164,126), 0.9);
-            color: #fff;
-            border-color: transparent;
+            background: var(--splash-accent-deep);
+            color: #fff8f0;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(var(--accent-color-rgb,197,164,126), 0.35);
+            box-shadow: 0 8px 20px rgba(138, 100, 64, 0.28);
         }
-        .splash-btn-enter.ready:hover, .splash-btn-enter.ready:active {
-            background: rgba(var(--accent-color-rgb,197,164,126), 1);
-            box-shadow: 0 6px 28px rgba(var(--accent-color-rgb,197,164,126), 0.5);
+        .splash-btn-enter.ready:hover,
+        .splash-btn-enter.ready:active {
+            background: var(--splash-accent);
+            transform: translateY(-1px);
+        }
+        .splash-btn-enter:disabled:not(.ready) {
+            opacity: 1;
         }
         .splash-page-num {
-            font-size: 11px;
-            color: rgba(255,255,255,0.2);
-            letter-spacing: 1.5px;
-            min-width: 36px;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            color: rgba(44, 36, 28, 0.42);
+            min-width: 48px;
             text-align: center;
         }
+        @media (min-width: 720px) {
+            #splash-declaration {
+                padding: 28px;
+                align-items: center;
+            }
+            .splash-letter {
+                height: auto;
+                max-height: min(860px, calc(100dvh - 56px));
+                background:
+                    linear-gradient(180deg, rgba(255,252,247,0.92), rgba(246,239,228,0.96));
+                box-shadow:
+                    0 24px 60px rgba(44, 36, 28, 0.12),
+                    0 0 0 1px rgba(44, 36, 28, 0.06);
+                padding: 40px 44px 28px;
+            }
+            .splash-letter-main {
+                max-height: 52vh;
+            }
+        }
+
         .message.rounded {
             border-radius: var(--radius);
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);

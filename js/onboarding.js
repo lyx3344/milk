@@ -131,15 +131,18 @@
 
 
 (function() {
-    var PLEDGE_KEY = 'splashPledgeSigned_v3';
-    var TOTAL = 6;
+    var PLEDGE_KEY = 'splashPledgeSigned_v5';
+    var TOTAL = 7;
     var PLEDGE_TEXT = '我绝不盈利、造谣、污蔑或嘲讽，并对自己的使用行为负完全责任';
+    var CHAPTERS = ['字卡', '谣言', '盈利', '看法', '通话', '年龄', '承诺'];
     var cur = 0;
 
     function initSplash() {
         var splash = document.getElementById('splash-declaration');
         if (!splash) return;
 
+        localStorage.removeItem('splashPledgeSigned_v4');
+        localStorage.removeItem('splashPledgeSigned_v3');
         localStorage.removeItem('splashPledgeSigned_v2');
         localStorage.removeItem('splashPledgeSigned_v1');
         localStorage.removeItem('splashPledgeSigned');
@@ -149,27 +152,17 @@
             return;
         }
 
-        var starsEl = document.getElementById('splash-stars');
-        if (starsEl) {
+        var chaptersEl = document.getElementById('splash-chapters');
+        if (chaptersEl) {
             var html = '';
-            for (var i = 0; i < 70; i++) {
-                var x = (Math.random() * 100).toFixed(1);
-                var y = (Math.random() * 100).toFixed(1);
-                var sz = Math.random() > 0.75 ? '3px' : '2px';
-                var del = (Math.random() * 4).toFixed(2);
-                var dur = (2 + Math.random() * 3).toFixed(1);
-                html += '<span style="left:'+x+'%;top:'+y+'%;width:'+sz+';height:'+sz+';animation-delay:'+del+'s;animation-duration:'+dur+'s;"></span>';
-            }
-            starsEl.innerHTML = html;
-        }
-
-        var dotsEl = document.getElementById('splash-dots');
-        if (dotsEl) {
-            var dhtml = '';
             for (var d = 0; d < TOTAL; d++) {
-                dhtml += '<div class="splash-dot'+(d===0?' active done':'')+'" data-dot="'+d+'"></div>';
+                html += '<button type="button" class="splash-chapter'+(d===0?' active':'')+'" data-chapter="'+d+'">'+CHAPTERS[d]+'</button>';
             }
-            dotsEl.innerHTML = dhtml;
+            chaptersEl.innerHTML = html;
+            chaptersEl.addEventListener('click', function(e) {
+                var btn = e.target.closest('.splash-chapter');
+                if (btn) goTo(parseInt(btn.getAttribute('data-chapter'), 10));
+            });
         }
 
         var prevBtn   = document.getElementById('splash-prev-btn');
@@ -202,11 +195,17 @@
                 if (val === PLEDGE_TEXT) {
                     pledgeInp.classList.add('correct');
                     if (hint) { hint.textContent = '✓ 承诺已确认，可以进入了'; hint.className = 'splash-pledge-hint ok'; }
-                    if (enterBtn) enterBtn.classList.add('ready');
+                    if (enterBtn) {
+                        enterBtn.classList.add('ready');
+                        enterBtn.disabled = false;
+                    }
                 } else {
                     pledgeInp.classList.remove('correct');
                     if (hint) { hint.textContent = '请完整输入上方承诺后方可进入'; hint.className = 'splash-pledge-hint'; }
-                    if (enterBtn) enterBtn.classList.remove('ready');
+                    if (enterBtn) {
+                        enterBtn.classList.remove('ready');
+                        enterBtn.disabled = true;
+                    }
                 }
             });
             pledgeInp.addEventListener('keydown', function(e) {
@@ -216,20 +215,14 @@
             });
         }
 
-        if (dotsEl) {
-            dotsEl.addEventListener('click', function(e) {
-                var dot = e.target.closest('.splash-dot');
-                if (dot) goTo(parseInt(dot.getAttribute('data-dot')));
-            });
-        }
-
         updateUI();
     }
 
     function goTo(idx) {
         var slides = document.querySelectorAll('.splash-slide');
-        var dots   = document.querySelectorAll('.splash-dot');
+        var chapters = document.querySelectorAll('.splash-chapter');
         var prevIdx = cur;
+        if (idx === prevIdx) return;
 
         if (slides[prevIdx]) {
             slides[prevIdx].classList.remove('active');
@@ -244,10 +237,18 @@
             slides[cur].classList.add('active');
         }
 
-        dots.forEach(function(dot, i) {
-            dot.classList.toggle('active', i === cur);
-            dot.classList.toggle('done', i < cur);
+        chapters.forEach(function(btn, i) {
+            btn.classList.toggle('active', i === cur);
+            btn.classList.toggle('done', i < cur);
         });
+
+        var activeChapter = chapters[cur];
+        if (activeChapter && activeChapter.scrollIntoView) {
+            activeChapter.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+
+        var main = document.querySelector('.splash-letter-main');
+        if (main) main.scrollTop = 0;
 
         updateUI();
 
@@ -264,8 +265,10 @@
         var nextBtn  = document.getElementById('splash-next-btn');
         var enterBtn = document.getElementById('splash-enter-btn');
         var pageNum  = document.getElementById('splash-page-num');
+        var fill     = document.getElementById('splash-progress-fill');
 
         if (pageNum) pageNum.textContent = (cur + 1) + ' / ' + TOTAL;
+        if (fill) fill.style.width = ((cur + 1) / TOTAL * 100) + '%';
         if (prevBtn) { prevBtn.disabled = (cur === 0); }
         if (cur === TOTAL - 1) {
             if (nextBtn)  nextBtn.style.display  = 'none';
@@ -281,7 +284,7 @@
         var splash = document.getElementById('splash-declaration');
         if (splash) {
             splash.classList.add('splash-fade-out');
-            setTimeout(function() { splash.style.display = 'none'; }, 950);
+            setTimeout(function() { splash.style.display = 'none'; }, 900);
         }
     }
 
